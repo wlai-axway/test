@@ -125,7 +125,7 @@ site_url: 'https://MYPROJECT-open-docs.netlify.app/', //URL to netlify site
 
 #### Add the Axway GitHub OAuth app to your microsite
 
-To enable users to log in to Netlify CMS with their GitHub accounts, you must add the Axway OAuth authentication provider to the microsite. 
+To enable users to log in to Netlify CMS with their GitHub accounts, you must add the Axway OAuth authentication provider to the microsite.
 
 1. Log in to [OpenDocs Netlify account](https://app.netlify.com/teams/opendocs/sites).
 2. Click your microsite.
@@ -179,9 +179,9 @@ If your content was migrated from the main Axway-Open-Docs site to a microsite, 
 
 ### Connect your microsite to the Axway-Open-Docs ecosystem
 
-**This must be done AFTER any content in Axway-Open-Docs repo has been removed**
+{{% alert title="Note" color="primary" %}}This must be done AFTER any content in Axway-Open-Docs repo has been removed.{{% /alert %}}
 
-When you and your stakeholders are happy with the content on your Netlify microsite, you can request that your microsite be added to the overall ecosystem. 
+When you and your stakeholders are happy with the content on your Netlify microsite, you can request that your microsite be added to the overall ecosystem.
 
 This involves:
 
@@ -248,7 +248,7 @@ Here is an example of a redirect for images:
 
 After the redirects have been implemented, and any content removed from the main site (if applicable), you must test the redirects according to the following criteria:
 
-1. Any links to the microsite content from the main site https://axway-open-docs.netlify.app/ work correctly
+1. Any links to the microsite content from the main site `https://axway-open-docs.netlify.app/` work correctly
 2. Edit on Github links in the microsite content brings user to microsite Git repo
 3. Edit on CMS links in microsite content brings user to CMS instance containing microsite collections only
 4. No broken links are found in either the main site or the microsite
@@ -262,33 +262,57 @@ You can set up your Git repo in whatever way works best for your team and your p
 #### Configure Dependabot alerts and security updates
 
 You must configure dependabot alerts and security updates for your microsite repository. GitHub's Dependabot creates pull requests, alerts, and sends email notifications when a dependency needs to be upgraded in your project because a dependency has introduced a security risk.
+
 1. In your GitHub microsite project, click **Settings**.
 2. Click **Security & analysis**.
 3. Enable **Dependabot alerts** and **Dependabot security updates**. The button next to the setting says **Disable** when enabled.
 4. Click **Save changes**.
 
-
 #### Add rules to protect branches
 
-You must add rules to protect the `master` branch:
+You must add rules to protect the `master` branch. Type the branch name pattern `master` and then enable the following rules:
 
-* Type the branch name pattern `master` 
-* It must require pull request reviews before merging (at least 1 review from a technical writer or doc owner)
-* It must require status checks to pass before merging. The following status checks must be enabled:
-  * Axway CLA
-  * Markdown linter
-  * Header rules
-  * Pages changed
-  * Redirect rules
-  * Mixed content
-  * deploy/netlify - The **deploy/netlify** check is dependent on adding the **Add Deploy Preview notifications to commits when Deploy Preview succeeds** notification in Netlify that you completed in '[Add deploy preview as comment to pull requests](#add-deploy-preview-as-comment-to-pull-requests).' If you don't add this notification, the **deploy/netlify** status check is unable to pass, which blocks the pull request.
-* It must require linear history
+* Require pull request reviews before merging (at least 1 review from a technical writer or doc owner)
+* Require status checks to pass before merging. The following status checks are required for pull requests:
+    * **Axway/cla** - A check that verifies the contributor has signed the Axway CLA.
+    * **MarkdownChecks** - A check against the `markdownlinst.json` file to verify the Markdown adheres to the rules. This is dependent on the `ciworkflow.yml` file and enabling **Actions** for the repo. When both are configured Markdown linting is performed. If the Markdown does not pass the rules specified in the linter file, that status check is unable to pass, which blocks the pull request. See [Markdown linting](#markdown-linting).
+    * **Header rules** - A Netlify check for Netlify site custom headers.
+    * **Pages changed** - A Netlify check that indicates how many files have been uploaded to the Netlify CDN.
+    * **Redirect rules** - A Netlify check for redirect URLs configured for Netlify in the `netlify.toml` file.
+    * **Mixed content** - A Netlify check for mixed content (when initial HTML is loaded over a secure HTTPS connection, but other resources such as images, videos, stylesheets, scripts are loaded over an insecure HTTP connection).
+    * **deploy/netlify** - A Netlify check to create a Netlify deploy preview. The **deploy/netlify** check is dependent on adding the **Add Deploy Preview notifications to commits when Deploy Preview succeeds** notification in Netlify. See [Add deploy preview as comment to pull requests](#add-deploy-preview-as-comment-to-pull-requests) for details. If you do not add this notification, the **deploy/netlify** status check is unable to pass, which blocks the pull request.
+* Require linear history
 
 ![Branch protections](/static/Images/microsite_github_protections.png)
 
 #### Markdown linting
 
-You must use the the GitHub Action that runs the Markdown linter (see `.github/workflows/ciworkflow.yml`).
+You must use the GitHub Action that runs the Markdown linter (see `.github/workflows/ciworkflow.yml`).
+
+Markdown linting and checks are completed when a PR is submitted after all configuration is completed. The following is required to enable MarkdownChecks.
+
+* **markdownlint.json**: A file in each repo that specifies the Markdown linter rules.
+* **ciworkflow.yml**: A workflow to run Markdown linting on the PR content against the `markdownlint.json` rules file.
+* **GitHub Actions**: Click the **Actions** tab for the repo and enable workflows. This enables running the workflows saved in the `.github/workflows` folder. If you do not enable workflow actions, then the workflows will not run and the check for the MarkdownChecks will not execute.
+
+#### Verify required status checks and workflows are executing
+
+After you have configured your repo and you are ready to complete pull requests, you must verify that the required status checks and workflows are executing. You can verify it by the following ways:
+
+* *When a PR is submitted, but before it is merged*:
+
+1. Create a PR and wait for the status checks to complete.
+2. Make sure you see the required checks and that they have passed.
+
+![GitHub Pull Request Status](github_pr_status)
+
+* *After a PR is completed and has been merged*:
+
+1. Click a Closed PR.
+2. Click the **Checks** menu.
+3. Make sure you see the required checks.
+
+![GitHub Pull Request Checks](github_pr_checks)
 
 #### Merge strategy
 
@@ -300,7 +324,7 @@ You can also enable **Automatically delete head branches** to keep your branch l
 
 #### Branching strategy
 
-You can set up any branching strategy as required by your product team. 
+You can set up any branching strategy as required by your product team.
 
 Some common options include:
 
@@ -318,7 +342,7 @@ Next, modify the CODEOWNERS (`.github/CODEOWNERS`) file with the appropriate use
 
 It is best to modify the following templates to suit your project:
 
-* Pull request template (`.github/pull_request_template.md`) - This template is used when a contributor creates a PR on GitHub. It is not used by Netlify CMS. 
+* Pull request template (`.github/pull_request_template.md`) - This template is used when a contributor creates a PR on GitHub. It is not used by Netlify CMS.
 * Issue templates (`.github/ISSUE_TEMPLATE/documentation-issue-template.md` and `.github/ISSUE_TEMPLATE/website-issue-template.md`) - These are used when a contributor creates a GitHub issue.
 
 ### Update the microsite repo README.md
