@@ -179,7 +179,7 @@ If your content was migrated from the main Axway-Open-Docs site to a microsite, 
 
 ### Connect your microsite to the Axway-Open-Docs ecosystem
 
-{{% alert title="Note" color="primary" %}}This must be done AFTER any content in Axway-Open-Docs repo has been removed.{{% /alert %}}
+This must be done after any content in Axway-Open-Docs repo has been removed.
 
 When you and your stakeholders are happy with the content on your Netlify microsite, you can request that your microsite be added to the overall ecosystem.
 
@@ -299,20 +299,20 @@ Markdown linting and checks are completed when a PR is submitted after all confi
 
 After you have configured your repo and you are ready to complete pull requests, you must verify that the required status checks and workflows are executing. You can verify it by the following ways:
 
-* *When a PR is submitted, but before it is merged*:
+*When a PR is submitted, but before it is merged*:
 
 1. Create a PR and wait for the status checks to complete.
 2. Make sure you see the required checks and that they have passed.
 
-![GitHub Pull Request Status](github_pr_status)
+![GitHub Pull Request Status](/static/Images/github_pr_status.png)
 
-* *After a PR is completed and has been merged*:
+*After a PR is completed and has been merged*:
 
 1. Click a Closed PR.
 2. Click the **Checks** menu.
 3. Make sure you see the required checks.
 
-![GitHub Pull Request Checks](github_pr_checks)
+![GitHub Pull Request Checks](/static/Images/github_pr_checks.png)
 
 #### Merge strategy
 
