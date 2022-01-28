@@ -165,9 +165,15 @@ When this is complete, test the **Edit on Netlify CMS** links again on your micr
 
 ### Set up publishing to Zoomin
 
-To enable publishing of the microsite content as a new _bundle_ on Zoomin production doc portal you must create a classification file, properties file, and zip file as detailed in [Docs-as-code on Zoomin](https://techweb.axway.com/confluence/display/RDAPI/Docs-as-code+on+Zoomin).
+To enable publishing of the microsite content as a new _bundle_ on the Zoomin production doc portal you must create a classification file, properties file, and zip file as detailed in [Docs-as-code on Zoomin](https://techweb.axway.com/confluence/display/RDAPI/Docs-as-code+on+Zoomin).
 
-When this is set up you must manually FTP the zip file to Zoomin to trigger an upload of the Netlify microsite content.
+When this is set, up manually FTP the zip file to Zoomin to trigger an upload of the Netlify microsite content. After you have verified the upload was successful and the documentation published as expected, do the following to automate the publishing process.
+
+1. Upload the classification and properties files to the [opendocs-gitlab repository](https://git.ecd.axway.org/documentation/opendocs-gitlab). This is the source repository for maintaining these files.
+
+2. Submit a ticket to the [R&D API Dev (RDAPI)](https://jira.axway.com/projects/RDAPI/issues/RDAPI-25390?filter=allopenissues) Jira project to request that your project be added as a job to the [Jenkins Open Docs project](https://apigw-builder.lab.dubl.axway.int/view/OpenDocs/) with access to deploy the job. Clone or refer to [RDAPI-25716](https://jira.axway.com/browse/RDAPI-25716?) as an example.
+
+3. After the ticket is completed and you have access to deploy the job, sign into the [Jenkins Open Docs project](https://apigw-builder.lab.dubl.axway.int/view/OpenDocs/), click your project, and then click **Build with Parameters**. Select your doc portal environment (staging or production, and then click **Build**.
 
 ### Remove documentation content from main Axway-Open-Docs repo (optional)
 
