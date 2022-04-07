@@ -1,10 +1,8 @@
 ---
-title: "Core Tasks"
-linkTitle: "Core Tasks"
+title: Core Tasks
+linkTitle: Core Tasks
 weight: 6
 date: 2017-01-05
-description: >
-  What can your user do with your project?
 ---
 
 {{% pageinfo %}}
