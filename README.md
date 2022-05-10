@@ -16,7 +16,7 @@ You must have the following installed in your development environment:
 * Hugo
 * Node.js
 
-See [Set up and work locally](https://axway-open-docs.netlify.app/docs/contribution_guidelines/setup_work_locally/) for information on recommended versions of these tools and for tips on installing them in a WSL environment.
+See [Set up and work locally](https://confluence.axway.com/display/RIE/Set+up+and+work+locally) for information on recommended versions of these tools and for tips on installing them in a WSL environment.
 
 The following steps assume that you already have a GitHub account in the Axway org and that you have the permissions to create new projects in that org.
 
@@ -29,7 +29,8 @@ The following steps assume that you already have a GitHub account in the Axway o
 3. On the next screen, enter the clone URL of this repository and the name for your new microsite.
 
     * To find the clone URL of this repository, click the drop-down arrow on the Code button above and copy the HTTPS URL to your clipboard.
-    * Enter a name following the naming convention `MYPROJECT-open-docs`, for example `amplify-central-open-docs`.
+    * Enter a name following the naming convention `MYPROJECT`, for example `platform-management`.
+    {{% alert title="Note" color="Primary" %}}When the Open Docs project was implemented, `MYPROJECT-open-docs` was used as the previous naming convention. You will see this naming convention used in older projects. {{% /alert %}}
 
     ![Import details](/static/Images/axway_github_import_details.png)
 
@@ -39,13 +40,13 @@ Clone your new repository:
 
 ```
 cd ~
-git clone git@github.com:Axway/MYPROJECT-open-docs.git
+git clone git@github.com:Axway/MYPROJECT.git
 ```
 
 After running these commands, you will have a local copy of the repository in the following location:
 
 ```
-/home/YOUR-UNIX-USERNAME/MYPROJECT-open-docs
+/home/YOUR-UNIX-USERNAME/MYPROJECT
 ```
 
 ### Build the site locally
@@ -53,7 +54,7 @@ After running these commands, you will have a local copy of the repository in th
 Run the `build.sh` command in your site root:
 
 ```
-cd ~/MYPROJECT-open-docs/
+cd ~/MYPROJECT/
 ./build.sh
 ```
 
@@ -83,7 +84,7 @@ Create a new site from your microsite repo in Netlify:
 
     ![Add site to Netlify](/static/Images/netlify_deploy_site.png)
 
-The site is now deployed on a random URL. To change the URL click **Site settings > Change site name** and enter a name in the format `MYPROJECT-open-docs`. The site will now be available on the URL `https://MYPROJECT-open-docs.netlify.app/`.
+The site is now deployed on a random URL. To change the URL click **Site settings > Change site name** and enter a name in the format `MYPROJECT`. The site will now be available on the URL `https://MYPROJECT.netlify.app/`.
 
 ### Add deploy preview as comment to pull requests
 
@@ -96,21 +97,21 @@ This adds a **deploy/netlify** status check that you must add to your branch's p
 Change the `github_repo` parameter in `config.toml` to point to your project repo as this is used by Hugo/Docsy to generate the GitHub edit links on each page. For example:
 
 ```
-github_repo = "https://github.com/Axway/MYPROJECT-open-docs"
+github_repo = "https://github.com/Axway/MYPROJECT"
 ```
 
-When this is complete, test the **Edit on GitHub** and **Create documentation issue** links on your microsite and verify that they link to the Github repo for your microsite.
+When this is complete, test the **Edit on GitHub** links on your microsite and verify that they link to the Github repo for your microsite.
 
 ### Customize the site to use your Netlify CMS instance and test the CMS edit links
 
-Make the following changes to get the **Edit on Netlify CMS** links on each page to link to the correct Netlify CMS app. The Netlify CMS app is available by default on the URL  `https://MYPROJECT-open-docs.netlify.app/admin/`.
+Make the following changes to get the **Edit on Netlify CMS** links on each page to link to the correct Netlify CMS app. The Netlify CMS app is available by default on the URL  `https://MYPROJECT.netlify.app/admin/`.
 
 #### Change baseURL in `config.toml` to the URL of your microsite
 
 Change the `baseURL` in `config.toml`:
 
 ```
-baseURL = "https://MYPROJECT-open-docs.netlify.app/"
+baseURL = "https://MYPROJECT.netlify.app/"
 ```
 
 #### Update the Netlify CMS configuration for your repository and microsite
@@ -118,9 +119,9 @@ baseURL = "https://MYPROJECT-open-docs.netlify.app/"
 Change `repo` and `site_url` in `static/admin/config.js` to point to your GitHub repo and your microsite.
 
 ```
-repo: 'Axway/MYPROJECT-open-docs', //Path to your GitHub repository.
+repo: 'Axway/MYPROJECT', //Path to your GitHub repository.
 ...
-site_url: 'https://MYPROJECT-open-docs.netlify.app/', //URL to netlify site
+site_url: 'https://MYPROJECT.netlify.app/', //URL to netlify site
 ```
 
 #### Add the Axway GitHub OAuth app to your microsite
@@ -136,7 +137,7 @@ To enable users to log in to Netlify CMS with their GitHub accounts, you must ad
 
 #### Test the CMS edit links
 
-When this is complete, test the **Edit on Netlify CMS** links on your microsite and verify that they link to the CMS instance for your microsite. You should see someting like this:
+When this is complete, test the **Edit on Netlify CMS** links on your microsite and verify that they link to the CMS instance for your microsite. You should see something like this:
 
 ![Netlify CMS editor](/static/Images/netlifycms_editor.jpg)
 
@@ -173,7 +174,7 @@ When this is set, up manually FTP the zip file to Zoomin to trigger an upload of
 
 2. Submit a ticket to the [R&D API Dev (RDAPI)](https://jira.axway.com/projects/RDAPI/issues/RDAPI-25390?filter=allopenissues) Jira project to request that your project be added as a job to the [Jenkins Open Docs project](https://apigw-builder.lab.dubl.axway.int/view/OpenDocs/) with access to deploy the job. Clone or refer to [RDAPI-25716](https://jira.axway.com/browse/RDAPI-25716?) as an example.
 
-3. After the ticket is completed and you have access to deploy the job, sign into the [Jenkins Open Docs project](https://apigw-builder.lab.dubl.axway.int/view/OpenDocs/), click your project, and then click **Build with Parameters**. Select your doc portal environment (staging or production, and then click **Build**.
+3. After the ticket is completed and you have access to deploy the job, sign into the [Jenkins Open Docs project](https://apigw-builder.lab.dubl.axway.int/view/OpenDocs/), click your project, and then click **Build with Parameters**. Select your doc portal environment, staging or production, and then click **Build**.
 
 ### Remove documentation content from main Axway-Open-Docs repo (optional)
 
@@ -200,7 +201,7 @@ Redirects must be added to the `netlify.toml` file in [Axway Open Docs repo](htt
 * Images (for example, `/Images/streams/*`)
 * CMS links (for example, `/admin/#/edit/streams/*`) **One redirect for each Netlify CMS collection**
 
-Here is an example of the redirects added for AMPLIFY Shared Services:
+Here is an example of the redirects added for Amplify Shared Services:
 
 ```
 [[redirects]]
