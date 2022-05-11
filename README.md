@@ -29,8 +29,7 @@ The following steps assume that you already have a GitHub account in the Axway o
 3. On the next screen, enter the clone URL of this repository and the name for your new microsite.
 
     * To find the clone URL of this repository, click the drop-down arrow on the Code button above and copy the HTTPS URL to your clipboard.
-    * Enter a name following the naming convention `MYPROJECT`, for example `platform-management`.
-    {{% alert title="Note" color="Primary" %}}When the Open Docs project was implemented, `MYPROJECT-open-docs` was used as the previous naming convention. You will see this naming convention used in older projects. {{% /alert %}}
+    * Enter a name following the naming convention `MYPROJECT`, for example `platform-management`. Note that when the Open Docs project was implemented, `MYPROJECT-open-docs` was used as the previous naming convention. You will see this naming convention used in older projects.
 
     ![Import details](/static/Images/axway_github_import_details.png)
 
