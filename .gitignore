@@ -17,3 +17,6 @@ tech-doc-hugo
 
 #Mac
 .DS_Store
+
+#hugo
+.hugo_build.lock

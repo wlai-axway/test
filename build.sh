@@ -9,10 +9,9 @@
 #
 # Description:
 #   This is roughly the flow of the script:
-#     1. make sure "themes/docsy/" submodule is checked out recursively
-#     2. make sure the npm dependencies are installed
-#     3. update config.toml
-#     4. runs "hugo server" from inside the build folder to build the site and the
+#     1. make sure "go" is available
+#     2. update config.toml
+#     3. runs "hugo server" to build the site and the
 #        micro site will be available on http://localhost:1313/
 #
 # Usage:
@@ -23,8 +22,8 @@
 set -e
 
 PROJECT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )
-DOCSY_DIR="themes/docsy"
 BRANCH_NAME=${BRANCH_NAME} # the BRANCH_NAME variable comes from Jenkins
+GO_HOME=${GO_HOME} # go home directory which is provided by Jenkins
 DEBUG=${DEBUG:-false}
 MODE=dev
 
@@ -37,33 +36,54 @@ while getopts ":m:" opt; do
     esac
 done
 
-# fCheckoutSubmodule:
-#   - makes sure the submodules and npm dependencies are available
-function fCheckoutSubmodule() {
-    echo "[INFO] Makes sure [${DOCSY_DIR}] submodule is checked out."
+# fInstallGo:
+#   - if go is not in the system path then this script will download and install it and make it available for the script
+#   - note that default hugo cache folder is /tmp/hugo_cache/
+function fInstallGo() {
+    local go_ver
+    local go_dir
 
-    if [[ -d "${DOCSY_DIR}" ]];then
-        git submodule update --init --force --recursive --checkout
-        echo "[INFO] ====================[ submodule info ]===================="
-        git submodule status
-        cd ${DOCSY_DIR} > /dev/null
-        git submodule status
-        cd ${PROJECT_DIR} > /dev/null
-        echo "[INFO] =========================================================="
+    if [[ -f "go.mod" ]]; then
+        # alternatively we can use latest go version by getting version from "https://go.dev/VERSION?m=text" which gets back go1.20
+        go_ver=$(cat go.mod | grep "^go " | head -n 1 | awk '{ print $2 }')
+        echo "[INFO] Expected go version according to [go.mod] is [${go_ver}]."
     else
-        echo "[ERROR] Can't find the docsy themes directory [${DOCSY_DIR}]."
+        echo "[ERROR] Missing file [go.mod]."
         exit 1
     fi
+    go_ver=${go_ver:-1.20} # give go a default version
+    go_dir="${HOME}/bin/go${go_ver}"
+    echo "[INFO] Home directory set to [${go_dir}]."
+    export PATH=${go_dir}/bin:${GO_HOME}/bin:$PATH
 
-    echo "[INFO] Install npm packages required by docsy."
-    if [[ ! -d "node_modules" ]];then
-        if [[ -f "package.json" ]];then
-            npm install
-        else
-            npm install -D --save autoprefixer
-            npm install -D --save postcss
-            npm install -D --save postcss-cli
+    if ! [ -x "$(command -v go)" ]; then
+        echo "[INFO] The [go] command is not detected in your environment."
+
+        if [[ ! -d "${go_dir}" ]];then
+            echo "[INFO] Installing go v${go_ver} to [${go_dir}]."
+            #https://go.dev/dl/go1.20.linux-amd64.tar.gz
+            mkdir -p ${go_dir}
+            curl -sL https://go.dev/dl/go${go_ver}.linux-amd64.tar.gz | tar -xz -C ${go_dir} --strip-components 1
         fi
+
+        
+        if ! [ -x "$(command -v go)" ]; then
+            echo "[ERROR] The [go] program is still not available after download/setup step!"
+            exit 1
+        fi
+    fi
+}
+
+# fInstallNpmDependencies:
+#   - makes sure npm dependencies are available
+function fInstallNpmDependencies() {
+    echo "[INFO] Install npm packages required by docsy."
+    if [[ -f "package.json" ]];then
+        npm install
+    else
+        npm install -D --save autoprefixer
+        npm install -D --save postcss
+        npm install -D --save postcss-cli
     fi
 }
 
@@ -115,7 +135,8 @@ function fRunHugo() {
     esac
 }
 
-fCheckoutSubmodule
+fInstallGo
+fInstallNpmDependencies
 fUpdateConfigToml
 fRunHugo
 echo "[INFO] Done."
