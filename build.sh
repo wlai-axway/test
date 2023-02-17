@@ -46,27 +46,33 @@ function fInstallGo() {
     if [[ -f "go.mod" ]]; then
         # alternatively we can use latest go version by getting version from "https://go.dev/VERSION?m=text" which gets back go1.20
         go_ver=$(cat go.mod | grep "^go " | head -n 1 | awk '{ print $2 }')
-        echo "[INFO] Expected go version according to [go.mod] is [${go_ver}]."
     else
         echo "[ERROR] Missing file [go.mod]."
         exit 1
     fi
     go_ver=${go_ver:-1.20} # give go a default version
     go_dir="${HOME}/bin/go${go_ver}"
-    echo "[INFO] Home directory set to [${go_dir}]."
+
+    # add the go directories to PATH to see if they exist
     export PATH=${go_dir}/bin:${GO_HOME}/bin:$PATH
 
-    if ! [ -x "$(command -v go)" ]; then
+    if [[ -x "$(command -v go)" ]]; then
+        echo "[INFO] The [go] command is found in [$(command -v go)]!"
+    else
         echo "[INFO] The [go] command is not detected in your environment."
-
-        if [[ ! -d "${go_dir}" ]];then
-            echo "[INFO] Installing go v${go_ver} to [${go_dir}]."
-            #https://go.dev/dl/go1.20.linux-amd64.tar.gz
-            mkdir -p ${go_dir}
-            curl -sL https://go.dev/dl/go${go_ver}.linux-amd64.tar.gz | tar -xz -C ${go_dir} --strip-components 1
+        echo "[INFO] Go home directory set to [${go_dir}]."
+        if [[ -d "${go_dir}" ]];then
+            echo "[INFO] Go home directory [${go_dir}] already exist but no executable [go] binary was found."
+            _date_timestamp=$(date '+%Y%m%d%H%M%S')
+            echo "[INFO] Moving this to [${go_dir}-${_date_timestamp}]!"
+            mv -f "${go_dir}" "${go_dir}-${_date_timestamp}"
         fi
 
-        
+        echo "[INFO] Installing go v${go_ver} to [${go_dir}]."
+        #https://go.dev/dl/go1.20.linux-amd64.tar.gz
+        mkdir -p ${go_dir}
+        curl -sL https://go.dev/dl/go${go_ver}.linux-amd64.tar.gz | tar -xz -C ${go_dir} --strip-components 1
+
         if ! [ -x "$(command -v go)" ]; then
             echo "[ERROR] The [go] program is still not available after download/setup step!"
             exit 1
